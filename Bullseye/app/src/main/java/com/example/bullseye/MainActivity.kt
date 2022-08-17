@@ -13,13 +13,18 @@ import kotlin.random.Random
 class MainActivity : AppCompatActivity() {
 
     private var sliderValue = 0
-    private val targetValue = Random.nextInt(1, 100)
+    private var targetValue = newTargetValue()
+    private var totalScore = 0
+    private var currentRound = 1
+
 
     //binding is of type ActivityMainBinding
     private lateinit var binding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        supportActionBar?.hide() //hides top bar
 
         //inflate() converts XML into View object
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -28,11 +33,19 @@ class MainActivity : AppCompatActivity() {
         val view = binding.root
         setContentView(view)
 
-        binding.targetTextView.text = targetValue.toString()
+        //reset game
+        startNewGame()
 
         binding.hitMeButton.setOnClickListener {
-            Log.i("Button Click Event", "Button has been clicked")
             showResult()
+
+            //update score
+            totalScore += pointsForCurrentRound()
+            binding.gameScoreTextView?.text = totalScore.toString() //? makes variable nullable
+        }
+
+        binding.startOverButton?.setOnClickListener {
+            startNewGame()
         }
 
         binding.seekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
@@ -51,17 +64,40 @@ class MainActivity : AppCompatActivity() {
         })
     }
 
+    private fun differenceAmount() = abs(targetValue - sliderValue)
+
+    private fun newTargetValue() = Random.nextInt(1,100)
+
     private fun pointsForCurrentRound(): Int {
         val maxScore = 100
-        val difference = abs(targetValue - sliderValue)
+        val difference = differenceAmount()
+        var bonus = 0
 
-        
-        return maxScore - difference
+        if (difference == 0) {
+            bonus = 100
+        } else if (difference == 1) {
+            bonus = 50
+        }
+        return maxScore - difference + bonus
+    }
+
+    private fun startNewGame() {
+        //resetting values
+        totalScore = 0
+        currentRound = 1
+        sliderValue = 50
+        targetValue = newTargetValue()
+
+        //resetting UI values
+        binding.gameScoreTextView?.text = totalScore.toString()
+        binding.gameRoundTextView?.text = currentRound.toString()
+        binding.targetTextView.text = targetValue.toString()
+        binding.seekBar.progress = sliderValue
     }
 
     private fun showResult() {
         //assigning strings
-        val dialogTitle = getString(R.string.result_dialog_title)
+        val dialogTitle = alertTitle()
         val dialogMessage =
             getString(R.string.result_dialog_message, sliderValue, pointsForCurrentRound())
         //val dialogMessage = "The slider's value is $sliderValue"
@@ -76,8 +112,36 @@ class MainActivity : AppCompatActivity() {
         //lambda dismisses dialog
         builder.setPositiveButton(R.string.result_dialog_button_text) { dialog, _ ->
             dialog.dismiss()
+
+            targetValue = newTargetValue()
+            binding.targetTextView.text = targetValue.toString()
+
+            currentRound += 1
+            binding.gameRoundTextView?.text = currentRound.toString()
         }
 
         builder.create().show()
+    }
+
+    private fun alertTitle(): String {
+        val difference = differenceAmount()
+
+        //when instead of if statement
+        val title: String = when {
+            difference == 0 -> {
+                getString(R.string.alert_title_1)
+            }
+            difference < 5 -> {
+                getString(R.string.alert_title_2)
+            }
+            difference <= 10 -> {
+                getString(R.string.alert_title_3)
+            }
+            else -> {
+                getString(R.string.alert_title_4)
+            }
+        }
+
+        return title
     }
 }
