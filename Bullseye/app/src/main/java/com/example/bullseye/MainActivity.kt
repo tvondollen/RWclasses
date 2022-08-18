@@ -24,7 +24,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        supportActionBar?.hide() //hides top bar
+
 
         //inflate() converts XML into View object
         binding = ActivityMainBinding.inflate(layoutInflater)
