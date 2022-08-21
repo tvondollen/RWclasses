@@ -16,7 +16,9 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/background" />
+        app:srcCompat="@drawable/background"
+
+        android:contentDescription="@string/background_alt"/>
 
     <TextView
         android:id="@+id/textView"
@@ -103,7 +105,9 @@
         app:layout_constraintEnd_toStartOf="@+id/scoreGroup"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/hitMeButton" />
+        app:layout_constraintTop_toBottomOf="@+id/hitMeButton"
+
+        android:contentDescription="@string/start_over_alt"/>
 
     <ImageButton
         android:id="@+id/infoButton"
@@ -116,7 +120,9 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/roundGroup"
-        app:layout_constraintTop_toTopOf="@+id/roundGroup" />
+        app:layout_constraintTop_toTopOf="@+id/roundGroup"
+
+        android:contentDescription="@string/info_alt"/>
 
     <LinearLayout
         android:id="@+id/scoreGroup"
@@ -141,7 +147,7 @@
             style="@style/game_stats_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="0" />
+            android:text="@string/zero_score" />
     </LinearLayout>
 
     <LinearLayout
@@ -167,6 +173,6 @@
             style="@style/game_stats_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="0" />
+            android:text="@string/zero_round" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
